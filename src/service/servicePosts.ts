@@ -19,10 +19,35 @@ export class ServiceMessage {
   async createPost(req: any, res: any) {}
 
   async GetAllpost(req: any, res: any) {}
-  async getPostById(req: any, res: any) {}
-  async deletePost(req: any, res: any) {}
+  async getPostById(req: any, res: any) {
+    const post_id = req.params.id;
+    try {
+      const data = await this.postDB.getPostById(post_id);
+      if (data == null) {
+        return res.status(500).send(" post not exist");
+      }
+      return res.status(200).json(data);
+    } catch (e) {
+      console.error("Error:", e);
+      return res.status(500).send("Internal Server Error");
+    }
+  }
+  async deletePost(req: any, res: any) {
+    const post_id = req.params.id;
+    if (post_id != null) {
+      this.postDB
+        .deletePost(post_id)
+        .then((e) => {
+          return res.status(204).send(e);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      return res.status(500).send("post not found");
+    }
+  }
 
   async reactPost(req: any, res: any) {}
+
   async save(req: any, res: any) {
     // const user2 = (await this.trepoclient.getUserById(
     //   req.body.receiver_id
@@ -42,19 +67,6 @@ export class ServiceMessage {
     // }
   }
 
-  async delete_fo_all(req: any, res: any) {
-    // const message_id = req.params.id;
-    // if (message_id != null) {
-    //   this.messageDB
-    //     .deleteMessageAll(message_id)
-    //     .then((e) => {
-    //       return res.status(204).send(e);
-    //     })
-    //     .catch((err) => console.log(err));
-    // } else {
-    //   return res.status(500).send("message not found");
-    // }
-  }
   async transfer_m(req: any, res: any) {
     // const { msg_id, usr_receiver } = req.body;
     // const message = await this.messageDB.getMessageById(msg_id);
@@ -74,19 +86,7 @@ export class ServiceMessage {
     //     .catch((err) => console.log(err));
     // }
   }
-  async suppparmoi(req: any, res: any) {
-    // const message_id = req.params.id;
-    // if (message_id != null) {
-    //   this.messageDB
-    //     .deleteMessagemoi(message_id)
-    //     .then((e) => {
-    //       return res.status(204).send(e);
-    //     })
-    //     .catch((err) => console.log(err));
-    // } else {
-    //   return res.status(500).send("message not found");
-    // }
-  }
+
   async updatemssage(req: any, res: any) {
     // try {
     //   const msg: message = req.body as message;
@@ -107,22 +107,6 @@ export class ServiceMessage {
     //   }
     // } catch (e) {
     //   return res.status(500).send(e);
-    // }
-  }
-
-  async getmsgby2user(req: any, res: any) {
-    // try {
-    //   const { sender_id, receiver_id } = req.query;
-    //   const user1 = await this.trepoclient.getUserById(sender_id);
-    //   const user2 = await this.trepoclient.getUserById(receiver_id);
-    //   if (!user1 || !user2) {
-    //     return res.status(404).send("Users not found");
-    //   }
-    //   const data = await this.messageDB.getAmisBy2user(sender_id, receiver_id);
-    //   return res.status(200).json(data);
-    // } catch (e) {
-    //   console.error("Error:", e);
-    //   return res.status(500).send("Internal Server Error");
     // }
   }
 }
