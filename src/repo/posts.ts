@@ -14,12 +14,24 @@ const db = pgp(dbConfig);
 
 export class PostDB {
   // Fonction pour insérer un Post
-  async createPost(id_user: number) {
-  
+  async createPost(id_user: number,post: posts) {
+    const insertQuery = `
+    INSERT INTO posts (url_img, date_pub, content, id_user, nbr_like)
+    VALUES ($[url_img], NOW(), $[content], $[id_user], 0);
+    RETURNING *
+    `;
+  post = await db.one(insertQuery, post);
+  console.log(post);
+  return post;
   }
 
   async GetAllpost(id_user: number) {
-   
+    const insertQuery = `
+    select * from posts where id_user=$1 order by id desc
+   `;
+
+   const date = await db.query(insertQuery,id_user);
+   return date;
   }
   // Fonction pour récupérer un Post par son ID
   async getPostById(id: number) {
