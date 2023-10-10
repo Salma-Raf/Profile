@@ -1,5 +1,5 @@
 import { posts } from "../model/posts";
-import { generateUpdaters } from '../utils/setting';
+import { generateUpdaters } from "../utils/setting";
 const pgp = require("pg-promise")();
 require("dotenv").config();
 const dbConfig = {
@@ -14,6 +14,7 @@ const db = pgp(dbConfig);
 
 export class PostDB {
   // Fonction pour insérer un Post
+<<<<<<< HEAD
   async createPost(id_user: number,post: posts) {
     const insertQuery = `
     INSERT INTO posts (url_img, date_pub, content, id_user, nbr_like)
@@ -33,20 +34,52 @@ export class PostDB {
    const date = await db.query(insertQuery,id_user);
    return date;
   }
+=======
+  async createPost(id_user: number) {}
+
+  async GetAllpost(id_user: number) {}
+>>>>>>> dca106e595ae524aaae0e49aa7b57c344f13f0d2
   // Fonction pour récupérer un Post par son ID
   async getPostById(id: number) {
-   
+    const selectQuery = `
+    SELECT * FROM posts
+    WHERE id = $[id] AND deleted is null
+    `;
+
+    const post = await db.oneOrNone(selectQuery, { id });
+
+    return post;
   }
 
   // Fonction pour mettre à jour un Post par son ID
 
-
   // Fonction pour supprimer un Post par son ID
   async deletePost(id: number) {
-    
+    const updateQuery = `
+    UPDATE posts
+    SET date_sup= NOW()
+    WHERE id = $[id]
+  `;
+
+    const result = await db.result(
+      updateQuery,
+      { id },
+      (r: { rowCount: any }) => r.rowCount
+    );
+    return result === 1;
   }
-  
+
   async reactPost(id: number) {
-   
+    const updateQuery = `
+    UPDATE posts
+    SET nbr_like=nbr_like+1
+    WHERE id = $[id]
+  `;
+    const result = await db.result(
+      updateQuery,
+      { id },
+      (r: { rowCount: any }) => r.rowCount
+    );
+    return result === 1;
   }
 }

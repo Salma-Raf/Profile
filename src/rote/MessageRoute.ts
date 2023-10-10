@@ -1,5 +1,5 @@
 import express from "express";
-import { ServiceMessage } from "../service/serviceMessage";
+import { ServiceMessage } from "../service/servicePosts";
 const router = express.Router();
 import { MessageDB } from "../repo/message";
 const userRepository = new MessageDB();
@@ -28,6 +28,5 @@ router.delete("/all/:id", (req: any, res: any) => {
 router.put("/:id", (req: any, res: any) => {
   serviceMessage.updatemssage(req, res);
 });
-
 
 module.exports = router;
