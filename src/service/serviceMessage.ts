@@ -1,5 +1,5 @@
 import { User } from "../model/User";
-import { message } from "../model/message";
+import { message } from "../model/posts";
 import { UserRepository } from "../repo/User";
 import { MessageDB } from "../repo/message";
 const pgp = require("pg-promise")();
@@ -58,7 +58,7 @@ export class ServiceMessage {
     const user1 = (await this.trepoclient.getUserById(
       message.sender_id
     )) as User;
-    console.log(user1 ,user2, message)
+    console.log(user1, user2, message);
     if (!user1 || !user2 || !message) {
       return res.status(500).send("users or message not found.");
     } else {
@@ -81,25 +81,24 @@ export class ServiceMessage {
         .catch((err) => console.log(err));
     } else {
       return res.status(500).send("message not found");
-   
     }
   }
   async updatemssage(req: any, res: any) {
     try {
       const msg: message = req.body as message;
-      const user1 =await this.trepoclient.getUserById(msg.sender_id);
+      const user1 = await this.trepoclient.getUserById(msg.sender_id);
       const user2 = await this.trepoclient.getUserById(msg.sender_id);
 
       if (!user1 || !user2) {
         return req.status(500).send("usersnotfound");
       }
-      const mes =await this.messageDB.getMessageById(req.params.id);
+      const mes = await this.messageDB.getMessageById(req.params.id);
 
       if (!mes) return res.status(500).send("msg not found");
-      console.log(mes)
+      console.log(mes);
       const result = await this.messageDB.updateMessage(req.params.id, msg);
-      
-      console.log(result)
+
+      console.log(result);
       if (result) {
         return res.status.send(result);
       } else {
@@ -109,7 +108,7 @@ export class ServiceMessage {
       return res.status(500).send(e);
     }
   }
-  
+
   async getmsgby2user(req: any, res: any) {
     try {
       const { sender_id, receiver_id } = req.query;
@@ -118,7 +117,7 @@ export class ServiceMessage {
       if (!user1 || !user2) {
         return res.status(404).send("Users not found");
       }
-  
+
       const data = await this.messageDB.getAmisBy2user(sender_id, receiver_id);
       return res.status(200).json(data);
     } catch (e) {
@@ -126,5 +125,4 @@ export class ServiceMessage {
       return res.status(500).send("Internal Server Error");
     }
   }
-  
 }

@@ -1,5 +1,5 @@
-import { message } from "../model/message";
-import { generateUpdaters } from '../utils/setting';
+import { message } from "../model/posts";
+import { generateUpdaters } from "../utils/setting";
 const pgp = require("pg-promise")();
 require("dotenv").config();
 const dbConfig = {
@@ -47,16 +47,16 @@ export class MessageDB {
 
   // Fonction pour mettre à jour un message par son ID
   async updateMessage(id: number, updatedMessage: message) {
-const updaters =  generateUpdaters(Object.keys(updatedMessage))
+    const updaters = generateUpdaters(Object.keys(updatedMessage));
     const updateQuery = `
       UPDATE messages
       SET ${updaters}
       WHERE id = $[id]
     `;
-      updatedMessage.id = id; // Ajoutez également l'ID aux données mises à jour
-      console.log('----',updaters,updatedMessage)
+    updatedMessage.id = id; // Ajoutez également l'ID aux données mises à jour
+    console.log("----", updaters, updatedMessage);
 
-    console.log(updateQuery)
+    console.log(updateQuery);
     const result = await db.result(
       updateQuery,
       updatedMessage,
@@ -83,7 +83,6 @@ const updaters =  generateUpdaters(Object.keys(updatedMessage))
     `;
 
     await db.none(updateQuery, id);
-
   }
 
   async getAmisBy2user(sender_id: number, receiver_id: number) {
@@ -92,7 +91,7 @@ const updaters =  generateUpdaters(Object.keys(updatedMessage))
       WHERE (sender_id = $1 AND receiver_id = $2) OR (sender_id = $2 AND receiver_id = $1)
       ORDER BY send_date ASC;
     `;
-    const data = await db.query(selectQuery, [sender_id, receiver_id ]);
+    const data = await db.query(selectQuery, [sender_id, receiver_id]);
     return data;
   }
   async transferMessage(messageId: message, newreceiver_id: number) {
