@@ -1,33 +1,28 @@
 import express from "express";
-import { ServiceMessage } from "../service/serviceMessage";
+import {  ServicePost } from "../service/servicePosts";
 const router = express.Router();
-import { MessageDB } from "../repo/message";
-const userRepository = new MessageDB();
-const serviceMessage = new ServiceMessage(userRepository);
+import { PostDB } from "../repo/posts";
+const postRepository = new PostDB();
+const servicePost = new ServicePost(postRepository);
 
 router.post("/", (req: any, res: any) => {
-  serviceMessage.save(req, res);
+  servicePost.createPost(req, res);
 });
-router.post("/transfert", (req: any, res: any) => {
-  serviceMessage.transfer_msg(req, res);
+router.post("/react", (req: any, res: any) => {
+  servicePost.reactPost(req, res);
 });
-router.get("/by2users", (req: any, res: any) => {
-  serviceMessage.getmsgby2user(req, res);
+router.get("/", (req: any, res: any) => {
+  servicePost.GetAllpost(req, res);
 });
 
 // router.post("/", (req: any, res: any) => {
-//     serviceMessage.save(req, res);
+//     servicePost.save(req, res);
 //   });
 
-router.delete("/moi/:id", (req: any, res: any) => {
-  serviceMessage.suppparmoi(req, res);
+router.delete("/:id", (req: any, res: any) => {
+  servicePost.deletePost(req, res);
 });
-router.delete("/all/:id", (req: any, res: any) => {
-  serviceMessage.delete_fo_all(req, res);
-});
-router.put("/:id", (req: any, res: any) => {
-  serviceMessage.updatemssage(req, res);
-});
+
 
 
 module.exports = router;
