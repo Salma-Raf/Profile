@@ -1,8 +1,7 @@
 // Importer la bibliothèque Express avec la syntaxe ES modules
 import express from "express";
 import cors from "cors";
-const client = require("./src/rote/UserRote.ts");
-const message = require("./src/rote/MessageRoute.ts");
+const profile = require("./src/rote/posts.ts");
 import { Server as SocketServer } from "socket.io";
 // require('./globals'); // Importez le fichier globals.js pour initialiser la variable globale
 
@@ -17,8 +16,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use("/api/client", client);
-app.use("/api/message", message);
+app.use("/api/profile", profile);
 
 // Définir une route pour la page d'accueil
 app.get("/", (req: any, res: any) => {
@@ -26,7 +24,7 @@ app.get("/", (req: any, res: any) => {
 });
 
 // Définir le port sur lequel le serveur écoutera
-const port = 3000;
+const port = 3001;
 const host = "192.168.0.7"; // Adresse IP sur laquelle le serveur écoute (0.0.0.0 signifie toutes les adresses IP disponibles)
 
 // Démarrer le serveur

@@ -33,9 +33,9 @@ export class ServicePost {
     }
   }
 
-  async GetAllpost(req: any, res: any) {
-    await this.postDB
-      .GetAllpost(req.params.id_user)
+  GetAllpost(req: any, res: any) {
+    this.postDB
+      .GetAllpost(req.params.id)
       .then((e) => {
         return res.status(200).send(e);
       })
