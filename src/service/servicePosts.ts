@@ -20,28 +20,28 @@ export class ServicePost {
   async createPost(req: any, res: any) {
     const user_id = req.body.id_user;
 
-    const user1 = await axios.get(process.env.API_URL+'/client/'+user_id)
+    const user1 = await axios.get(process.env.API_URL + "/client/" + user_id);
     if (user1 != null) {
-        await this.postDB.
-          createPost(req.body as posts)
-          .then((e) => {
-            return res.status(200).send(e);
-          })
-          .catch((err) => console.log("Error in create post", err));
-      } else {
-        return res.status(500).send("users not found");
-      }
+      await this.postDB
+        .createPost(req.body as posts)
+        .then((e) => {
+          return res.status(200).send(e);
+        })
+        .catch((err) => console.log("Error in create post", err));
+    } else {
+      return res.status(500).send("users not found");
+    }
   }
 
   async GetAllpost(req: any, res: any) {
-    await this.postDB.GetAllpost(req.params.id_user).then((e) => {
-      return res.status(200).send(e);
-    })
-    .catch((err) =>
-{
-  return res.status(500).send(err);
-  }
-     );
+    await this.postDB
+      .GetAllpost(req.params.id_user)
+      .then((e) => {
+        return res.status(200).send(e);
+      })
+      .catch((err) => {
+        return res.status(500).send(err);
+      });
   }
   async getPostById(req: any, res: any) {
     const post_id = req.params.id;
@@ -71,22 +71,20 @@ export class ServicePost {
   }
 
   async reactPost(req: any, res: any) {
-    if  (req.params.id != null ){
-    const post =await this.postDB.getPostById(req.params.id)
-    if (post != null) {
-      this.postDB.reactPost(post.id)
-        .then((e) => {
-          return res.status(204).send(e);
-        })
-        .catch((err) => console.log(err));
-    }else {
-      return res.status(500).send("post not found");
+    if (req.params.id != null) {
+      const post = await this.postDB.getPostById(req.params.id);
+      if (post != null) {
+        this.postDB
+          .reactPost(post.id)
+          .then((e) => {
+            return res.status(204).send(e);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        return res.status(500).send("post not found");
+      }
+    } else {
+      return res.status(500).send("id not found");
     }
-  } else {
-    return res.status(500).send("id not found");
   }
-  }
-
- 
-
 }
