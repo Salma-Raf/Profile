@@ -1,5 +1,4 @@
 import { posts } from "../model/posts";
-import { generateUpdaters } from "../utils/setting";
 const pgp = require("pg-promise")();
 require("dotenv").config();
 const dbConfig = {
@@ -17,9 +16,10 @@ export class PostDB {
   async createPost(post: posts) {
     const insertQuery = `
     INSERT INTO posts (url_img, date_pub, content, id_user, nbr_like)
-    VALUES ($[url_img], NOW(), $[content], $[id_user], 0);
+    VALUES ($[url_img], NOW(), $[content], $[id_user], 0)
     RETURNING *
     `;
+    
     post = await db.one(insertQuery, post);
     console.log(post);
     return post;
@@ -27,7 +27,7 @@ export class PostDB {
 
   async GetAllpost(id_user: number) {
     const insertQuery = `
-    select * from posts where id_user=$1 order by id desc
+    select * from posts where id_user=$1 AND date_sup is null  order by id desc
    `;
 
     const date = await db.query(insertQuery, id_user);
@@ -37,7 +37,7 @@ export class PostDB {
   async getPostById(id: number) {
     const selectQuery = `
     SELECT * FROM posts
-    WHERE id = $[id] AND deleted is null
+    WHERE id = $[id] AND date_sup is null
     `;
 
     const post = await db.oneOrNone(selectQuery, { id });
@@ -67,7 +67,7 @@ export class PostDB {
     const updateQuery = `
     UPDATE posts
     SET nbr_like=nbr_like+1
-    WHERE id = $[id]
+    WHERE id = $[id] AND date_sup is null
   `;
     const result = await db.result(
       updateQuery,

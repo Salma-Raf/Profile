@@ -18,6 +18,7 @@ export class ServicePost {
   }
 
   async createPost(req: any, res: any) {
+
     const user_id = req.body.id_user;
 
     const user1 = await axios.get(process.env.API_URL+'/client/'+user_id)
@@ -33,8 +34,8 @@ export class ServicePost {
       }
   }
 
-  async GetAllpost(req: any, res: any) {
-    await this.postDB.GetAllpost(req.params.id_user).then((e) => {
+   GetAllpost(req: any, res: any) {
+     this.postDB.GetAllpost(req.params.id).then((e) => {
       return res.status(200).send(e);
     })
     .catch((err) =>
