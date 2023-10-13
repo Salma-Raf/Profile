@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 const profile = require("./src/rote/posts.ts");
 import { Server as SocketServer } from "socket.io";
+const host ="10.0.0.139"
 // require('./globals'); // Importez le fichier globals.js pour initialiser la variable globale
 
 // const cors = require("cors");
@@ -10,10 +11,10 @@ import { Server as SocketServer } from "socket.io";
 // Créer une instance d'application Express
 const app = express();
 const corsOptions = {
-  origin: "http://localhost:4200", // Remplacez par l'origine de votre application Angular
+  origin: `http://localhost:4200`, // Remplacez par l'origine de votre application Angular
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/profile", profile);
@@ -25,16 +26,15 @@ app.get("/", (req: any, res: any) => {
 
 // Définir le port sur lequel le serveur écoutera
 const port = 3001;
-const host = "192.168.0.7"; // Adresse IP sur laquelle le serveur écoute (0.0.0.0 signifie toutes les adresses IP disponibles)
 
 // Démarrer le serveur
-const server = app.listen(port, () => {
+const server = app.listen(port,host, () => {
   console.log(`Serveur Express en cours d'exécution sur le port ${port}`);
 });
 
 const io = new SocketServer(server, {
   cors: {
-    origin: "http://localhost:4200",
+    origin: `http://localhost:4200`,
     credentials: true,
   },
 });

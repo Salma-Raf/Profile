@@ -9,6 +9,7 @@ router.post("/", (req: any, res: any) => {
   servicePost.createPost(req, res);
 });
 router.post("/react/:id", (req: any, res: any) => {
+  // return res.status(200).json("ok")
   servicePost.reactPost(req, res);
 });
 router.get("/:id", (req: any, res: any) => {
