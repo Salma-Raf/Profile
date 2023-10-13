@@ -19,7 +19,7 @@ export class PostDB {
     VALUES ($[url_img], NOW(), $[content], $[id_user], 0)
     RETURNING *
     `;
-    
+
     post = await db.one(insertQuery, post);
     console.log(post);
     return post;

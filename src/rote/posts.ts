@@ -1,5 +1,5 @@
 import express from "express";
-import {  ServicePost } from "../service/servicePosts";
+import { ServicePost } from "../service/servicePosts";
 const router = express.Router();
 import { PostDB } from "../repo/posts";
 const postRepository = new PostDB();
@@ -22,7 +22,5 @@ router.get("/:id", (req: any, res: any) => {
 router.delete("/:id", (req: any, res: any) => {
   servicePost.deletePost(req, res);
 });
-
-
 
 module.exports = router;
