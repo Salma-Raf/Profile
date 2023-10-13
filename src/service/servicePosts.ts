@@ -74,17 +74,23 @@ export class ServicePost {
     if (req.params.id != null) {
       const post = await this.postDB.getPostById(req.params.id);
       if (post != null) {
+        const data = await this.postDB.getlike(
+          req.body.id_user,
+          req.body.id_post
+        );
+        if (data) {
+          return res.status(500).send(data);
+        }
+        await this.postDB.reactPost1(req.body.id_user, req.body.id_post);
         this.postDB
-          .reactPost(post.id)
+          .reactPost2(req.body.id_post)
           .then((e) => {
-            return res.status(204).send(e);
+            return res.status(204).send("ok");
           })
           .catch((err) => console.log(err));
       } else {
-        return res.status(500).send("post not found");
+        return res.status(500).send("post not ");
       }
-    } else {
-      return res.status(500).send("id not found");
     }
   }
 }
