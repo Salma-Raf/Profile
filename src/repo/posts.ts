@@ -1,5 +1,4 @@
 import { posts } from "../model/posts";
-import { generateUpdaters } from "../utils/setting";
 const pgp = require("pg-promise")();
 require("dotenv").config();
 const dbConfig = {
@@ -27,7 +26,7 @@ export class PostDB {
 
   async GetAllpost(id_user: number) {
     const insertQuery = `
-    select * from posts where id_user=$1 order by id desc
+    select * from posts where id_user=$1 AND date_sup is null  order by id desc
    `;
 
     const date = await db.query(insertQuery, id_user);
@@ -37,7 +36,7 @@ export class PostDB {
   async getPostById(id: number) {
     const selectQuery = `
     SELECT * FROM posts
-    WHERE id = $[id] AND deleted is null
+    WHERE id = $[id] AND date_sup is null
     `;
 
     const post = await db.oneOrNone(selectQuery, { id });
@@ -63,17 +62,34 @@ export class PostDB {
     return result === 1;
   }
 
-  async reactPost(id: number) {
+  async reactPost1(id_user: number,id_post:number) {
+      const react = 'INSERT INTO "likes" (id_post, id_user) VALUES($1, $2)';
+     await db.none(react, [id_post, id_user])
+  }
+   
+    
+  async reactPost2(id_post: number) {
+
     const updateQuery = `
     UPDATE posts
     SET nbr_like=nbr_like+1
-    WHERE id = $[id]
+    WHERE id = $[id_post] AND date_sup is null 
   `;
     const result = await db.result(
       updateQuery,
-      { id },
+      { id_post },
       (r: { rowCount: any }) => r.rowCount
     );
     return result === 1;
+  }
+
+  async getlike(id_user: number,id_post:number) {
+    console.log(id_post)
+    const insertQuery = `
+    select * from likes where id_user=$1 AND id_post=$2`;
+
+    const date = await db.query(insertQuery,[id_user,id_post]);
+    console.log(date)
+    return date[0];
   }
 }

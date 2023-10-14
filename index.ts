@@ -19,7 +19,7 @@ const corsOptions = {
   origin: `http://${host}:4200`, // Remplacez par l'origine de votre application Angular
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 const storage = multer.diskStorage({
@@ -56,13 +56,13 @@ app.get("/", (req: any, res: any) => {
 });
 
 // Démarrer le serveur
-const server = app.listen(port, () => {
+const server = app.listen(port,host, () => {
   console.log(`Serveur Express en cours d'exécution sur le port ${port}`);
 });
 
 const io = new SocketServer(server, {
   cors: {
-    origin: "http://localhost:4200",
+    origin: `http://localhost:4200`,
     credentials: true,
   },
 });

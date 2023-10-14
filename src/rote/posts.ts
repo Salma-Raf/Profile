@@ -8,10 +8,11 @@ const servicePost = new ServicePost(postRepository);
 router.post("/", (req: any, res: any) => {
   servicePost.createPost(req, res);
 });
-router.post("/react", (req: any, res: any) => {
+router.post("/react/:id", (req: any, res: any) => {
+  // return res.status(200).json("ok")
   servicePost.reactPost(req, res);
 });
-router.get("/", (req: any, res: any) => {
+router.get("/:id", (req: any, res: any) => {
   servicePost.GetAllpost(req, res);
 });
 

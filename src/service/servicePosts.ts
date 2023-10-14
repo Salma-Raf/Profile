@@ -18,6 +18,7 @@ export class ServicePost {
   }
 
   async createPost(req: any, res: any) {
+
     const user_id = req.body.id_user;
 
     const user1 = await axios.get(process.env.API_URL+'/client/'+user_id)
@@ -33,8 +34,8 @@ export class ServicePost {
       }
   }
 
-  async GetAllpost(req: any, res: any) {
-    await this.postDB.GetAllpost(req.params.id_user).then((e) => {
+   GetAllpost(req: any, res: any) {
+     this.postDB.GetAllpost(req.params.id).then((e) => {
       return res.status(200).send(e);
     })
     .catch((err) =>
@@ -74,13 +75,17 @@ export class ServicePost {
     if  (req.params.id != null ){
     const post =await this.postDB.getPostById(req.params.id)
     if (post != null) {
-      this.postDB.reactPost(post.id)
-        .then((e) => {
-          return res.status(204).send(e);
+   const data= await  this.postDB.getlike(req.body.id_user,req.body.id_post);
+      if(data){
+        return res.status(500).send(data);
+      }
+   await   this.postDB.reactPost1(req.body.id_user,req.body.id_post)
+        this.postDB.reactPost2(req.body.id_post).then((e) => {
+          return res.status(204).send("ok");
         })
         .catch((err) => console.log(err));
     }else {
-      return res.status(500).send("post not found");
+      return res.status(500).send("post not ");
     }
   } else {
     return res.status(500).send("id not found");
