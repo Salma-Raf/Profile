@@ -1,33 +1,59 @@
 // Importer la bibliothèque Express avec la syntaxe ES modules
 import express from "express";
 import cors from "cors";
-const client = require("./src/rote/UserRote.ts");
-const message = require("./src/rote/MessageRoute.ts");
+const profile = require("./src/rote/posts");
 import { Server as SocketServer } from "socket.io";
+import multer from "multer";
+
 // require('./globals'); // Importez le fichier globals.js pour initialiser la variable globale
 
 // const cors = require("cors");
 
 // Créer une instance d'application Express
+// Définir le port sur lequel le serveur écoutera
+const port = 3001;
+const host = "localhost"; // Adresse IP sur laquelle le serveur écoute (0.0.0.0 signifie toutes les adresses IP disponibles)
+
 const app = express();
 const corsOptions = {
-  origin: "http://localhost:4200", // Remplacez par l'origine de votre application Angular
+  origin: `http://${host}:4200`, // Remplacez par l'origine de votre application Angular
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use("/api/client", client);
-app.use("/api/message", message);
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "posts/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+const uploadPost = multer({
+  storage,
+});
+app.post(
+  "/upload-image-post",
+  uploadPost.single("imageProfilFile"),
+  (req, res) => {
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({ message: "Aucun fichier image n'a été envoyé." });
+    }
+    console.log(req.file.filename);
+    return res.status(200).json(req.file.filename);
+  }
+);
+
+app.use("/api/profile", profile);
+app.use("/posts", express.static("posts")); //express static c'est repertoire from laquelle va effectuer aprendre des donner
 
 // Définir une route pour la page d'accueil
 app.get("/", (req: any, res: any) => {
   res.send("Hello, World!");
 });
-
-// Définir le port sur lequel le serveur écoutera
-const port = 3000;
-const host = "192.168.0.7"; // Adresse IP sur laquelle le serveur écoute (0.0.0.0 signifie toutes les adresses IP disponibles)
 
 // Démarrer le serveur
 const server = app.listen(port, () => {

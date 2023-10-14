@@ -16,13 +16,13 @@ export class PostDB {
   // Fonction pour insérer un Post
   async createPost(post: posts) {
     const insertQuery = `
-    INSERT INTO posts (url_img, date_pub, content, id_user, nbr_like)
-    VALUES ($[url_img], NOW(), $[content], $[id_user], 0);
-    RETURNING *
-    `;
-    post = await db.one(insertQuery, post);
+  INSERT INTO posts (url_img, date_pub, content, id_user, nbr_like)
+  VALUES ($[url_img], NOW(), $[content], $[id_user], 0)
+  RETURNING id, url_img, date_pub, content, id_user, nbr_like;
+`;
+    const result = await db.one(insertQuery, post);
     console.log(post);
-    return post;
+    return result;
   }
 
   async GetAllpost(id_user: number) {
