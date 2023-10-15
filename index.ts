@@ -2,8 +2,10 @@
 import express from "express";
 import cors from "cors";
 const profile = require("./src/rote/posts.ts");
+const statistique = require("./src/rote/static.ts");
+
 import { Server as SocketServer } from "socket.io";
-const host ="10.0.0.139"
+const host = "localhost";
 // require('./globals'); // Importez le fichier globals.js pour initialiser la variable globale
 
 // const cors = require("cors");
@@ -18,7 +20,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/profile", profile);
-
+app.use("/api/statics", statistique);
 // Définir une route pour la page d'accueil
 app.get("/", (req: any, res: any) => {
   res.send("Hello, World!");
@@ -28,7 +30,7 @@ app.get("/", (req: any, res: any) => {
 const port = 3001;
 
 // Démarrer le serveur
-const server = app.listen(port,host, () => {
+const server = app.listen(port, host, () => {
   console.log(`Serveur Express en cours d'exécution sur le port ${port}`);
 });
 
