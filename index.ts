@@ -1,10 +1,11 @@
 // Importer la bibliothèque Express avec la syntaxe ES modules
 import express from "express";
 import cors from "cors";
-const profile = require("./src/rote/posts");
+const profile = require("./src/rote/posts.ts");
+const statistique = require("./src/rote/static.ts");
 import { Server as SocketServer } from "socket.io";
 import multer from "multer";
-
+const host = "localhost";
 // require('./globals'); // Importez le fichier globals.js pour initialiser la variable globale
 
 // const cors = require("cors");
@@ -12,7 +13,6 @@ import multer from "multer";
 // Créer une instance d'application Express
 // Définir le port sur lequel le serveur écoutera
 const port = 3001;
-const host = "localhost"; // Adresse IP sur laquelle le serveur écoute (0.0.0.0 signifie toutes les adresses IP disponibles)
 
 const app = express();
 const corsOptions = {
@@ -48,6 +48,7 @@ app.post(
 );
 
 app.use("/api/profile", profile);
+app.use("/api/statics", statistique);
 app.use("/posts", express.static("posts")); //express static c'est repertoire from laquelle va effectuer aprendre des donner
 
 // Définir une route pour la page d'accueil
@@ -56,7 +57,7 @@ app.get("/", (req: any, res: any) => {
 });
 
 // Démarrer le serveur
-const server = app.listen(port,host, () => {
+const server = app.listen(port, host, () => {
   console.log(`Serveur Express en cours d'exécution sur le port ${port}`);
 });
 
