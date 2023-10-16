@@ -12,10 +12,12 @@ router.post("/react/:id", (req: any, res: any) => {
   // return res.status(200).json("ok")
   servicePost.reactPost(req, res);
 });
+router.get("/all", (req: any, res: any) => {
+  servicePost.GetAllposts(req, res);
+});
 router.get("/:id", (req: any, res: any) => {
   servicePost.GetAllpost(req, res);
 });
-
 // router.post("/", (req: any, res: any) => {
 //     servicePost.save(req, res);
 //   });
